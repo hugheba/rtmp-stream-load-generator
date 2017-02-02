@@ -24,7 +24,7 @@ def streamFile = (opt.getProperty('file'))?: './test.mp4'
 def rtmpApp = (opt.getProperty('server'))?: 'rtmp://localhost/live'
 
 Closure getcmd = { file, rtmp ->
-    def cmdStr = "/usr/local/bin/ffmpeg ${file} -vcodec copy -acodec copy -f flv ${rtmp}/test-${new Random().nextInt()}"
+    def cmdStr = "/usr/local/bin/ffmpeg -i ${file} -vcodec copy -acodec copy -f flv ${rtmp}/test-${new Random().nextInt()}"
     return cmdStr.tokenize(' ')
 }
 
