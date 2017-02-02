@@ -33,9 +33,6 @@ List<String> cmds = []
     cmds.add(getcmd(streamFile, rtmpApp))
 }
 
-print cmds
-return
-
 GParsPool.withPool {
     cmds.eachParallel {
         println "Running: ${it}"
