@@ -19,7 +19,7 @@ if(opt.h) {
     return
 }
 
-Integer max = (opt.getProperty('concurrecy')?: 1) as Integer
+Integer max = (opt.getProperty('concurrency')?: 1) as Integer
 def streamFile = (opt.getProperty('file'))?: './test.mp4'
 def rtmpApp = (opt.getProperty('server'))?: 'rtmp://localhost/live'
 
@@ -28,10 +28,13 @@ Closure getcmd = { file, rtmp ->
     return cmdStr.tokenize(' ')
 }
 
-def cmds = []
-[1..10].each {
-    cmds << getcmd(streamFile, rtmpApp)
+List<String> cmds = []
+(1..max).each {
+    cmds.add(getcmd(streamFile, rtmpApp))
 }
+
+print cmds
+return
 
 GParsPool.withPool {
     cmds.eachParallel {
