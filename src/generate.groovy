@@ -5,7 +5,7 @@
 @Grab(group="org.codehaus.gpars", module="gpars", version="1.2.1")
 
 import groovy.util.OptionAccessor
-import groovyx.gpars.GParsPool
+import groovyx.gpars.GParsExecutorsPool
 
 def cli = new CliBuilder(usage: './generate.groovy -[hfrc]')
 cli.h(longOpt: 'help', 'usage information', required: false)
@@ -28,17 +28,15 @@ Closure getcmd = { file, rtmp ->
     return cmdStr.tokenize(' ')
 }
 
-List<String> cmds = []
-(1..max).each {
-    cmds.add(getcmd(streamFile, rtmpApp))
-}
-
-GParsPool.withPool {
-    cmds.eachParallel {
-        println "Running: ${it}"
-        Process process = new ProcessBuilder().inheritIO().command(it).start()
-        process.waitFor()
-        println "Exited with code ${process.exitValue()}"
+GParsExecutorsPool.withPool(max) { es ->
+    (1..max).each {
+        es << {
+            def cmd = getcmd(streamFile, rtmpApp)
+            println "Running: ${cmd}"
+            Process process = new ProcessBuilder().inheritIO().command(cmd).start()
+            process.waitFor()
+            println "Exited with code ${process.exitValue()}"
+        }
     }
 }
 
