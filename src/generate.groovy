@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 /**
- * @auther Bryan Hughes <hugheba@gmail.com>
+ * @author Bryan Hughes <hugheba@gmail.com>
  */
 @Grab(group="org.codehaus.gpars", module="gpars", version="1.2.1")
 
